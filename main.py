@@ -1,21 +1,25 @@
 from fastapi import FastAPI, HTTPException
-import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 import numpy as np
 import pandas as pd
-import fastapi.middleware.cors as CORSMiddleware
+
+
 
 app = FastAPI()
 
-origins =[
-    'https://localhost:5173'
+
+origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "https://localhost:5173",
 ]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,       
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],          
-    allow_headers=["*"],         
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
@@ -28,14 +32,16 @@ def recommend(anime_name, k=20):
     title = anime_name.lower().strip()
     match = anime_df[anime_df["Title"].str.lower().str.strip() == title]
 
+    # If anime not found
     if match.empty:
         return {
             "status": "anime_not_found",
-            "message": "Requested anime not found in database. Showing default recommendations.",
+            "message": "Anime not found. Showing default recommendations.",
             "requested_anime": anime_name,
             "recommended": anime_df["Title"].head(k).tolist()
         }
 
+    # If anime found
     index = match.index[0]
     similar_indexes = top_k_sim[index][:k]
     recommended_list = anime_df.iloc[similar_indexes]["Title"].tolist()
@@ -46,16 +52,10 @@ def recommend(anime_name, k=20):
         "requested_anime": anime_name,
         "recommended": recommended_list
     }
-
 @app.get("/")
 def home():
-    return {"message": "baburao ganpatrao apte... jai maharashtaa!"}
+    return {"message": "baburao ganpatrao apte... jai maharashtra!"}
 
 @app.get("/recommend/{anime_name}")
 def get_recommendations(anime_name: str, k: int = 20):
     return recommend(anime_name, k)
-
-
-# MY POOKIE server !!   
-if __name__ == "__main__":
-    uvicorn.run("server:app", host="0.0.0.0", port=8000, reload=True)
