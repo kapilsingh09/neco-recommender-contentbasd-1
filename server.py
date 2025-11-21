@@ -49,7 +49,7 @@ def recommend(anime_name, k=20):
 
 @app.get("/")
 def home():
-    return {"message": "Anime Recommender API running 🚀"}
+    return {"message": "baburao ganpatrao apte... jai maharashtaa!"}
 
 @app.get("/recommend/{anime_name}")
 def get_recommendations(anime_name: str, k: int = 20):
