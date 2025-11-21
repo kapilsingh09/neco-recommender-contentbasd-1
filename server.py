@@ -2,8 +2,22 @@ from fastapi import FastAPI, HTTPException
 import uvicorn
 import numpy as np
 import pandas as pd
+import fastapi.middleware.cors as CORSMiddleware
 
 app = FastAPI()
+
+origins =[
+    'https://localhost:5173'
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,       
+    allow_credentials=True,
+    allow_methods=["*"],          
+    allow_headers=["*"],         
+)
+
 
 anime_df = pd.read_pickle("anime.pkl")
 top_k_sim = np.load("top_k_sim-1.npy")
