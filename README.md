@@ -26,6 +26,5 @@ uvicorn server:app --reload
 ```
 
 
-## ❤️Author
 
-Made by ****
+## Author:**{window.scroll-y:0}**
